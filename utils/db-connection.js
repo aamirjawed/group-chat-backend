@@ -13,7 +13,8 @@ const sequelize =  new Sequelize(
     dialect:"mysql",
     dialectOptions: {
       ssl: {
-        ca: fs.readFileSync('./certs/isrgrootx1.pem'),
+        // ca: fs.readFileSync('./certs/isrgrootx1.pem'),
+        rejectUnauthorized: false
       },
     },
 });
