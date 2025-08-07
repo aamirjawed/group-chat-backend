@@ -9,11 +9,11 @@ const sequelize =  new Sequelize(
     process.env.DB_PASSWORD,
     {
     host:process.env.DB_HOST,
-    PORT:process.env.DB_PORT,
+    port:process.env.DB_PORT || 3000,
     dialect:"mysql",
     dialectOptions: {
       ssl: {
-        // ca: fs.readFileSync('./certs/isrgrootx1.pem'),
+        
         rejectUnauthorized: false
       },
     },
