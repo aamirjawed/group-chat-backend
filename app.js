@@ -82,13 +82,13 @@ const port = process.env.PORT || 3000 // Added fallback
 process.on('uncaughtException', (error) => {
     console.error('Uncaught Exception:', error)
     // Log the error but don't exit in development
-    // process.exit(1) // Uncomment in production
+    process.exit(1) // Uncomment in production
 })
 
 process.on('unhandledRejection', (reason, promise) => {
     console.error('Unhandled Rejection at:', promise, 'reason:', reason)
     // Log the error but don't exit in development
-    // process.exit(1) // Uncomment in production
+    process.exit(1) // Uncomment in production
 })
 
 // CORS configuration
