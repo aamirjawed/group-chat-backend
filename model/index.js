@@ -1,12 +1,12 @@
-// associations.js - COMPLETELY REWRITTEN
+
 import User from './userModel.js'
 import Message from './messageModel.js'
 import Group from './groupModel.js'
-import GroupMember from './groupMemberModel.js' // Make sure this import exists!
+import GroupMember from './groupMemberModel.js'
 
 console.log("Setting up associations...");
 
-// 1. User-Message relationship (one-to-many)
+
 User.hasMany(Message, {
     foreignKey: 'userId', 
     onDelete: 'CASCADE',
@@ -17,7 +17,7 @@ Message.belongsTo(User, {
     as: 'sender'
 });
 
-// 2. Group-Message relationship (one-to-many)  
+ 
 Group.hasMany(Message, {
     foreignKey: 'groupId', 
     onDelete: 'CASCADE',
@@ -28,7 +28,7 @@ Message.belongsTo(Group, {
     as: 'group'
 });
 
-// 3. User-Group many-to-many through GroupMember (THE MAIN FIX!)
+// 3. User-Group many-to-many through GroupMember
 User.belongsToMany(Group, {
     through: GroupMember,
     foreignKey: 'userId',
@@ -72,7 +72,7 @@ Group.belongsTo(User, {
     as: 'creator'
 });
 
-console.log("✅ All associations set up successfully");
+console.log("All associations set up successfully");
 
-// Export named exports, not default
+
 export { User, Message, Group, GroupMember };

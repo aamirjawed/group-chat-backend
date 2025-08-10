@@ -13,7 +13,7 @@ const getUserMessage = async (req, res) => {
       return res.status(400).json({ error: "User not found" });
     }
 
-    // get groupId from params (for RESTful routes) or query (for current route)
+    // get groupId from params  or query
     let groupId = req.params.groupId || req.query.groupId;
     
     // check if groupId is provided
@@ -145,19 +145,34 @@ const getUserMessage = async (req, res) => {
       order: [['createdAt', 'ASC']]
     });
 
-    // add sender info to each message
+    // add sender info to each message and handle file messages
     const messagesWithSender = [];
     for (let i = 0; i < allMessages.length; i++) {
       const message = allMessages[i];
       const senderInfo = usersData.find(user => user.id === message.userId);
       
-      // handle content field
+      // handle content field based on message type
       const messageContent = message.content || '';
+      let userMessage = messageContent; // default for text messages
+      let fileInfo = null;
       
-      messagesWithSender.push({
+      
+      if (message.messageType && message.messageType !== 'text') {
+        try {
+          fileInfo = JSON.parse(messageContent);
+         
+          const fileTypeUpper = message.messageType.toUpperCase();
+          userMessage = `[${fileTypeUpper}] ${fileInfo.fileName || 'File'}`;
+        } catch (error) {
+          console.error('Error parsing file info for message', message.id, ':', error);
+          userMessage = `[${message.messageType.toUpperCase()}] File`;
+        }
+      }
+      
+      const messageObj = {
         id: message.id,
         content: messageContent,
-        userMessage: messageContent, // for compatibility
+        userMessage: userMessage,
         messageType: message.messageType || 'text',
         userId: message.userId,
         createdAt: message.createdAt,
@@ -167,13 +182,20 @@ const getUserMessage = async (req, res) => {
           email: senderInfo.email
         } : null,
         isOwn: message.userId === userId
-      });
+      };
+      
+    
+      if (fileInfo) {
+        messageObj.fileInfo = fileInfo;
+      }
+      
+      messagesWithSender.push(messageObj);
     }
 
-    // create online users list (simple implementation)
+   
     const onlineUserIds = [];
     if (groupMembers.length > 0) {
-      // just add first few members as online for demo
+      
       for (let i = 0; i < Math.min(3, groupMembers.length); i++) {
         onlineUserIds.push(groupMembers[i].id);
       }
@@ -194,10 +216,10 @@ const getUserMessage = async (req, res) => {
         description: groupDetails.description,
         createdBy: groupDetails.createdBy
       },
-      id: userId, // for old frontend compatibility
+      id: userId,
       messages: messagesWithSender,
-      users: groupMembers, // group members list
-      members: groupMembers, // same data with different name
+      users: groupMembers,
+      members: groupMembers,
       onlineUsers: onlineUserIds,
       onlineCount: onlineUserIds.length,
       totalMessages: messagesWithSender.length,

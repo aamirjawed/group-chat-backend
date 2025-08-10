@@ -21,7 +21,7 @@ export const userMessageController = async (req, res) => {
             })
         }
 
-        // Optional: Verify the group exists and user is a member
+        //  Verify the group exists and user is a member
         const group = await Group.findByPk(groupId, {
             include: [{
                 model: User,
@@ -41,9 +41,9 @@ export const userMessageController = async (req, res) => {
 
         // Create the message with correct field name
         const message = await Message.create({
-            content: userMessage, // Fixed: use 'content' instead of 'userMessage'
+            content: userMessage,
             userId: req.userId,
-            groupId: groupId // Fixed: include required groupId
+            groupId: groupId 
         })
 
         if (!message) {
@@ -59,7 +59,7 @@ export const userMessageController = async (req, res) => {
             include: [{
                 model: User,
                 as: 'sender',
-                attributes: ['id', 'fullName', 'email'] // Don't include sensitive data
+                attributes: ['id', 'fullName', 'email']
             }]
         })
 

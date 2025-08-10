@@ -3,7 +3,7 @@ import User from '../model/userModel.js'
 
 export const authUser = async (req, res, next) => {
     try {
-        console.log("All cookies:", req.cookies) // Add this line
+        console.log("All cookies:", req.cookies)
         const { token } = req.cookies
 
         if (!token) {
@@ -35,15 +35,6 @@ export const authUser = async (req, res, next) => {
 
     } catch (error) {
         console.log("Error in auth middleware:", error.message)
-
-        // Handle specific JWT errors
-        if (error.name === 'TokenExpiredError') {
-            return res.status(401).json({
-                success: false,
-                error: "Token expired",
-                message: "Please login again"
-            })
-        }
 
         return res.status(401).json({
             success: false,

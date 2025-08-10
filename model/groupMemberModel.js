@@ -1,4 +1,4 @@
-// groupMemberModel.js - Junction table for many-to-many relationship
+
 import { DataTypes } from "sequelize";
 import sequelize from "../utils/db-connection.js";
 
@@ -37,7 +37,7 @@ const GroupMember = sequelize.define('GroupMember', {
     indexes: [
         {
             unique: true,
-            fields: ['groupId', 'userId'] // Prevent duplicate memberships
+            fields: ['groupId', 'userId']
         }
     ]
 })
